@@ -18,68 +18,79 @@ function linkedListGenerator(){
   }
   
   function add(value){
-    let newNode = {
-      value: value,
-      next: null
-    };
     if (!head){
-      head = newNode;
-      tail = newNode;
-      return newNode;
+      head = {value:value, next:null};
+      tail = head;
+      return head;
     }
-    let currentNode = head;
-    while (currentNode.next){
-      currentNode = currentNode.next;
+
+    let node = head;
+    while (node.next){
+      node = node.next;
     }
-    currentNode.next = newNode;
-    tail = newNode;
+    node.next = {value:value, next:null};
+    tail = node.next;
   }
 
   function remove(number){
-    
-    console.log(number);
-    console.log(head);
-    let node = head;
-    let count = 0;
-    let preceedingNode;
-    let followingNode;
-    while (node){
-      console.log(count, node.value);
-      if (count === number - 1){
-        preceedingNode = node;
-      }
-      if (count === number + 1){
-        followingNode = node;
-      }
-      node = node.next;
-      count++;
-    }
-    if (followingNode){
-      preceedingNode.next = followingNode;
-      tail = followingNode;
-      return; 
-    }
-    preceedingNode.next = null;
-    tail = preceedingNode;
     if (number === 0){
       head = head.next;
-      
+      if (head && !head.next){
+        tail = head;
+      }
+      return;
     }
-    console.log('end: ', head);
+    let index = 0;
+    let node = head;
+    let previousNode;
+    while (node){
+      if (index === number - 1){
+        previousNode = node;
+      }
+      if (index === number){
+        previousNode.next = node.next;
+        if (!previousNode.next){
+          tail = previousNode;
+        }
+        return previousNode;
+      }
+      if (index < number && !node.next){
+        return false;
+      }
+      index++;
+      node = node.next;
+    }
+    return false;
   }
 
   function get(number){
+    if (!head){
+      return false;
+    }
+    if (number === 0){
+      return head;
+    }
+    let index = 0;
     let node = head;
-    for (let i = 0; i < number; i++){
-      if (!node.next){
-        return false;
+    while (node){
+      if (index === number){
+        return node;
       }
+      index++;
       node = node.next;
     }
-    return node;
+    return false;
   }
 
-  function insert(){}
+  function insert(value, index){
+    if (index === 0){
+      return head = {value:value, next:head};
+    }
+    if (get(index)){
+      return get(index-1).next = {value:value, next:get(index)};
+    }
+    return false;
+  }
 
   return {
     getHead,
